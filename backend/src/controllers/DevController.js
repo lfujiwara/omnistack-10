@@ -77,4 +77,28 @@ module.exports = {
         response.json(err ? err : { message: 'Deleted', old_dev })
       )
   },
+  syncWithGithub: async (request, response) => {
+    const { github_username } = request.params
+
+    let dev = await Dev.findOne({ github_username })
+
+    if (!dev) {
+      response.status(404)
+      return response.json({ message: 'Dev not found' })
+    }
+
+    const apiResponse = await axios.get(
+      `https://api.github.com/users/${github_username}`
+    )
+
+    const { name = apiResponse.data.login, avatar_url, bio } = apiResponse.data
+
+    if (name) dev.name = name
+    if (avatar_url) dev.avatar_url = avatar_url
+    if (bio) dev.bio = bio
+
+    dev.save()
+
+    return response.json(dev)
+  },
 }

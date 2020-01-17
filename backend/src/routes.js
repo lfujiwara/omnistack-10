@@ -7,6 +7,7 @@ const routes = Router()
 routes.get('/devs', DevController.index)
 routes.post('/devs', DevController.store)
 routes.patch('/devs/:github_username', DevController.update)
+routes.patch('/devs/:github_username/sync', DevController.syncWithGithub)
 routes.delete('/devs/:github_username', DevController.destroy)
 
 routes.get('/search', SearchController.index)
