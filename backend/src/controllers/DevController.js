@@ -4,7 +4,16 @@ const parseArrayAsString = require('../utils/parseStringAsArray')
 
 module.exports = {
   index: async (request, response) => {
-    const devs = await Dev.find()
+    let filters = request.query
+    if (filters)
+      // Se houver filtros, transforme strings em regex
+      filters = Object.entries(filters).reduce((acc, cur) => {
+        if (cur[1] instanceof String || typeof cur[1] === 'string')
+          acc[cur[0]] = { $regex: cur[1] }
+        else acc[cur[0]] = cur[1]
+        return acc
+      }, {})
+    const devs = await Dev.find(filters ? filters : {})
     return response.json(devs)
   },
   store: async (request, response) => {
