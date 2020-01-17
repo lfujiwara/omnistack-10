@@ -37,12 +37,12 @@ module.exports = {
     return response.json(dev)
   },
   update: async (request, response) => {
-    const { github_username } = request.body
+    const { github_username } = request.params
     const dev = await Dev.findOne({ github_username })
 
     if (!dev) {
       response.code(404)
-      return response.json({ message: 'User not found' })
+      return response.json({ message: 'Dev not found' })
     }
 
     Object.entries(request.body)
@@ -54,7 +54,7 @@ module.exports = {
     return response.json(dev)
   },
   destroy: async (request, response) => {
-    const { github_username } = request.query
+    const { github_username } = request.params
     const dev = await Dev.findOne({ github_username })
 
     if (!dev) {
