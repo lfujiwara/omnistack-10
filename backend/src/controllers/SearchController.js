@@ -6,10 +6,7 @@ module.exports = {
     const { latitude, longitude, techs } = request.query
     const techsArray = parseArrayAsString(techs)
 
-    const devs = await Dev.find({
-      techs: {
-        $in: techsArray,
-      },
+    const query = {
       location: {
         $near: {
           $geometry: {
@@ -19,7 +16,10 @@ module.exports = {
           $maxDistance: 10000,
         },
       },
-    })
+    }
+
+    if (techsArray.length) query['techs'] = { techs: { $in: techsArray } }
+    const devs = await Dev.find()
 
     return response.json({ devs })
   },
