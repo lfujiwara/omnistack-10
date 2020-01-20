@@ -4,6 +4,10 @@ const parseArrayAsString = require('../utils/parseStringAsArray')
 module.exports = {
   async index(request, response) {
     const { latitude, longitude, techs } = request.query
+    if (!latitude || !longitude) {
+      response.status(400)
+      return response.json({ message: 'No valid location provided' })
+    }
     const techsArray = parseArrayAsString(techs)
 
     const query = {
