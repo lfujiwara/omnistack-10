@@ -10,20 +10,35 @@ module.exports = {
     }
     const techsArray = parseArrayAsString(techs)
 
-    const query = {
-      location: {
-        $near: {
-          $geometry: {
-            type: 'Point',
-            coordinates: [longitude, latitude],
+    let query
+    if (techsArray[0] !== '')
+      query = {
+        techs: { $in: techsArray },
+        location: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [longitude, latitude],
+            },
+            $maxDistance: 10000,
           },
-          $maxDistance: 10000,
         },
-      },
-    }
+      }
+    else
+      query = {
+        location: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [longitude, latitude],
+            },
+            $maxDistance: 10000,
+          },
+        },
+      }
 
-    if (techsArray.length) query['techs'] = { techs: { $in: techsArray } }
-    const devs = await Dev.find()
+    console.log(query)
+    const devs = await Dev.find(query)
 
     return response.json({ devs })
   },
