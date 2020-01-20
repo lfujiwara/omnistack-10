@@ -5,7 +5,8 @@ const parseArrayAsString = require('../utils/parseStringAsArray')
 module.exports = {
   index: async (request, response) => {
     let filters = request.query
-    if (filters)
+
+    if (Object.entries(filters))
       // Se houver filtros, transforme strings em regex
       filters = Object.entries(filters).reduce((acc, cur) => {
         if (cur[1] instanceof String || typeof cur[1] === 'string')
