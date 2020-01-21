@@ -37,7 +37,6 @@ module.exports = {
         },
       }
 
-    console.log(query)
     const devs = await Dev.find(query)
 
     return response.json({ devs })
